@@ -2,25 +2,63 @@
 
 playGame();
 
-function getComputerChoice(gameMoves) {
+function getComputerChoice(userChoice, computerChoice, gameMoves,) {
+    let computerChoiceLabel = document.createElement("p")
     let randomNumber = Math.floor(Math.random() * (Object.keys(gameMoves).length));
-    let computerChoice = Object.keys(gameMoves)[randomNumber];
-    return computerChoice
+    computerChoice = Object.keys(gameMoves)[randomNumber];
+    document.querySelector(".userInputText").appendChild(computerChoiceLabel).textContent = `The computer used ${computerChoice}`
+    
+    playRound(userChoice, computerChoice, gameMoves)
 }
 
-// function getRandomIntInclusive(min, max) {
-//     const minCeiled = Math.ceil(min);
-//     const maxFloored = Math.floor(max);
-//     return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); 
-//   }
-  
 
-function getHumanChoice() {
-    let humanChoice = window.prompt("Rock, paper or scissors?")
-    humanChoice.toLowerCase
-    return humanChoice
+
+function getHumanChoice(userChoice, computerChoice, gameMoves) {
+
+    let rockButton = document.createElement("button")
+    let paperButton = document.createElement("button")
+    let scissorsButton = document.createElement("button")
+    let dragonButton = document.createElement("button")
+    let ufoButton = document.createElement("button")
+    let humanChoiceLabel = document.createElement("p")
+    humanChoiceLabel.classList.add('userInputText')
+    let gamefield = document.querySelector("body")
+
+    gamefield.appendChild(rockButton).textContent = "Rock 🪨";
+    gamefield.appendChild(paperButton).textContent = "Paper 📄";
+    gamefield.appendChild(scissorsButton).textContent = "Scissors ✂️"
+    gamefield.appendChild(dragonButton).textContent = "Dragon 🐉"
+    gamefield.appendChild(ufoButton).textContent = "Ufo 🛸"
+
+    let buttons = gamefield.querySelectorAll("button")
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            gamefield.appendChild(humanChoiceLabel).textContent = `You used ${button.textContent}`
+            userChoice = button.textContent.toLowerCase().slice(0, button.textContent.length - 3)
+            getComputerChoice(userChoice, computerChoice, gameMoves)
+            // return (button.textContent)
+        })
+    })
 }
 
+
+function playRound(userChoice, computerChoice, gameMoves) {
+    
+    let gamefield = document.querySelector("body")
+    let resultLabel = document.createElement("p")
+
+    if (gameMoves[userChoice].wins.includes(computerChoice)) {
+        gamefield.appendChild(resultLabel).textContent = `you won :) ${userChoice} beats ${computerChoice}`
+        humanScore++;
+    } else if (gameMoves[userChoice].loses.includes(computerChoice)) {
+        gamefield.appendChild(resultLabel).textContent = `you lost :( ${computerChoice} beats ${userChoice}`
+        computerScore++;
+    } else if (gameMoves[userChoice].tie.includes(computerChoice)) {
+        gamefield.appendChild(resultLabel).textContent = 'tie!'
+    }
+
+    round++
+}
 
 
 function playGame() {
@@ -28,43 +66,28 @@ function playGame() {
     let computerScore = 0
     let rounds = 5
     let round = 0
+    let userChoice = ''
+    let computerChoice = ''
+
 
     const gameMoves = {
-        'rock': {wins: ['scissors'], loses: ['paper', 'dragon', 'tank'], tie: ['rock']},
-        'paper': {wins: ['rock'], loses: ['scissors', 'dragon', 'tank'], tie: ['paper']},
-        'scissors': {wins: ['paper'], loses: ['rock', 'dragon', 'tank'], tie: ['scissors']},
-        'dragon': {wins: ['scissors', 'rock', 'paper', 'tank'], loses: [], tie: ['dragon']},
-        'tank': {wins: ['scissors', 'rock', 'paper'], loses: ['dragon'], tie: ['tank']},
+        'rock': { wins: ['scissors'], loses: ['paper', 'dragon', 'ufo'], tie: ['rock'] },
+        'paper': { wins: ['rock'], loses: ['scissors', 'dragon', 'ufo'], tie: ['paper'] },
+        'scissors': { wins: ['paper'], loses: ['rock', 'dragon', 'ufo'], tie: ['scissors'] },
+        'dragon': { wins: ['scissors', 'rock', 'paper', 'ufo'], loses: [], tie: ['dragon'] },
+        'ufo': { wins: ['scissors', 'rock', 'paper'], loses: ['dragon'], tie: ['ufo'] },
     };
 
-    for (round; round < rounds; round++) {
-        playRound(getHumanChoice(), getComputerChoice(gameMoves), gameMoves)
-
-        if (round == 4) {
-            if (humanScore > computerScore) {
-                console.log(`you won by ${humanScore} to ${computerScore}`);
-            } else if (humanScore < computerScore) {
-                console.log(`you lost by ${computerScore} to ${humanScore}`);
-            } else if (humanScore == computerScore) {
-                console.log(`tie`);
-            }
+    if (round == 4) {
+        if (humanScore > computerScore) {
+            console.log(`you won by ${humanScore} to ${computerScore}`);
+        } else if (humanScore < computerScore) {
+            console.log(`you lost by ${computerScore} to ${humanScore}`);
+        } else if (humanScore == computerScore) {
+            console.log(`tie`);
         }
     }
 
-    function playRound(humanChoice, computerChoice, gameMoves) {
-        if (!Object.keys(gameMoves).includes(humanChoice)) {
-            console.log("you must write rock, paper, dragon, tank or scissors. Zero points for you");
-            computerScore++
-        } else {
-            if (gameMoves[humanChoice].wins.includes(computerChoice)) {
-                console.log(`you won :) ${humanChoice} beats ${computerChoice}`);
-                humanScore++;
-            } else if (gameMoves[humanChoice].loses.includes(computerChoice)) {
-                console.log(`you lost :( ${computerChoice} beats ${humanChoice}`);
-                computerScore++;
-            } else if (gameMoves[humanChoice].tie.includes(computerChoice)) {
-                console.log('tie!');
-            }
-        }
-    }
+    getHumanChoice(userChoice, computerChoice, gameMoves)
+
 }

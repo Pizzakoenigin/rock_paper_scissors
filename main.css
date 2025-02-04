@@ -1,0 +1,16 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.gamefield {
+
+    margin: 2em auto;
+    width: fit-content;
+
+}
+
+button {
+    padding: 0.5em 1em;
+    margin: 0 1em 0 0;
+}

@@ -90,9 +90,9 @@ function initGame() {
     gamefield.appendChild(scissorsButton).textContent = "Scissors ✂️"
     gamefield.appendChild(dragonButton).textContent = "Dragon 🐉"
     gamefield.appendChild(ufoButton).textContent = "Ufo 🛸"
-
-    gamefield.appendChild(computerChoiceLabel)
     gamefield.appendChild(resultLabel)
+    gamefield.appendChild(computerChoiceLabel)
+    
     humanChoiceLabel.classList.add('userInputText')
     computerChoiceLabel.classList.add('computerInputText')
     resultLabel.classList.add('finalResult')

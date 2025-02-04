@@ -3,14 +3,11 @@
 initGame();
 
 function getComputerChoice(userChoice, computerChoice, gameMoves, gameData) {
-    let computerChoiceLabel = document.createElement("p")
     let randomNumber = Math.floor(Math.random() * (Object.keys(gameMoves).length));
     computerChoice = Object.keys(gameMoves)[randomNumber];
-    document.querySelector(".userInputText").appendChild(computerChoiceLabel).textContent = `The computer used ${computerChoice}`
+    document.querySelector(".computerInputText").textContent = `The computer used ${computerChoice}`
     playRound(userChoice, computerChoice, gameMoves, gameData)
 }
-
-
 
 function playRound(userChoice, computerChoice, gameMoves, gameData) {
     if (gameMoves[userChoice].wins.includes(computerChoice)) {
@@ -24,15 +21,33 @@ function playRound(userChoice, computerChoice, gameMoves, gameData) {
     }
 
     gameData.round++
+    document.querySelector(".score").textContent = `Round ${gameData.round} out of ${gameData.rounds} | Human: ${gameData.humanScore} Computer ${gameData.computerScore} `
 
-    if (gameData.round == 4) {
+    if (gameData.round == 5) {
         if (gameData.humanScore > gameData.computerScore) {
             document.querySelector(".finalResult").textContent = `you won by ${gameData.humanScore} to ${gameData.computerScore}`;
+            finishGame();
         } else if (gameData.humanScore < gameData.computerScore) {
-            document.querySelector(".finalResult").textContent = `you lost by ${gameData.computerScore} to ${gameData.humanScore}`;
+            document.querySelector(".finalResult").textContent = `you lost by ${gameData.humanScore} to ${gameData.computerScore}`;
+            finishGame();
         } else if (gameData.humanScore == gameData.computerScore) {
             document.querySelector(".finalResult").textContent = `tie`;
+            finishGame();
         }
+    }
+
+    function finishGame() {
+        let rstButton = document.createElement('button')
+        document.querySelector(".computerInputText").remove()
+        document.querySelector(".userInputText").remove()
+        document.querySelectorAll("button").forEach((button) => {
+            button.disabled = true
+        })
+        document.querySelector(".gamefield").appendChild(rstButton).textContent = 'Restart'
+        rstButton.addEventListener('click', () => {
+            document.querySelector("body").removeChild(document.querySelector(".gamefield"));
+            initGame()
+        })
     }
 }
 
@@ -55,7 +70,7 @@ function initGame() {
 
     let userChoice = ''
     let computerChoice = ''
-    let gamefield = document.querySelector("body")
+    let gamefield = document.createElement("div")
     let resultLabel = document.createElement("p")
     let rockButton = document.createElement("button")
     let paperButton = document.createElement("button")
@@ -63,16 +78,25 @@ function initGame() {
     let dragonButton = document.createElement("button")
     let ufoButton = document.createElement("button")
     let humanChoiceLabel = document.createElement("p")
+    let computerChoiceLabel = document.createElement("p")
+    let score = document.createElement("p")
 
+    document.querySelector("body").appendChild(gamefield)
+    gamefield.classList.add('gamefield')
+
+    gamefield.appendChild(score).textContent = `Round ${gameData.round} out of ${gameData.rounds} | Human: ${gameData.humanScore} Computer ${gameData.computerScore} `
     gamefield.appendChild(rockButton).textContent = "Rock 🪨";
     gamefield.appendChild(paperButton).textContent = "Paper 📄";
     gamefield.appendChild(scissorsButton).textContent = "Scissors ✂️"
     gamefield.appendChild(dragonButton).textContent = "Dragon 🐉"
     gamefield.appendChild(ufoButton).textContent = "Ufo 🛸"
 
+    gamefield.appendChild(computerChoiceLabel)
     gamefield.appendChild(resultLabel)
     humanChoiceLabel.classList.add('userInputText')
+    computerChoiceLabel.classList.add('computerInputText')
     resultLabel.classList.add('finalResult')
+    score.classList.add('score')
 
     let buttons = gamefield.querySelectorAll("button")
     buttons.forEach((button) => {
